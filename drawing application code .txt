@@ -1,0 +1,125 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Function to draw the canvas
+void drawCanvas(const vector<vector<char>>& canvas) {
+    for (const auto& row : canvas) {
+        for (char pixel : row) {
+            cout << pixel;
+        }
+        cout << endl;
+    }
+}
+
+// Function to initialize the canvas with empty space
+void initCanvas(vector<vector<char>>& canvas, int width, int height) {
+    canvas.clear();
+    for (int i = 0; i < height; ++i) {
+        vector<char> row(width, ' ');
+        canvas.push_back(row);
+    }
+}
+
+// Function to draw a line on the canvas
+void drawLine(vector<vector<char>>& canvas, int x1, int y1, int x2, int y2, char color) {
+    for (int y = y1; y <= y2; ++y) {
+        for (int x = x1; x <= x2; ++x) {
+            canvas[y][x] = color;
+        }
+    }
+}
+
+// Function to draw a rectangle on the canvas
+void drawRectangle(vector<vector<char>>& canvas, int x1, int y1, int x2, int y2, char color) {
+    drawLine(canvas, x1, y1, x2, y1, color); // Top side
+    drawLine(canvas, x1, y1, x1, y2, color); // Left side
+    drawLine(canvas, x2, y1, x2, y2, color); // Right side
+    drawLine(canvas, x1, y2, x2, y2, color); // Bottom side
+}
+
+// Function to draw a circle on the canvas
+void drawCircle(vector<vector<char>>& canvas, int centerX, int centerY, int radius, char color) {
+    for (int y = 0; y < canvas.size(); ++y) {
+        for (int x = 0; x < canvas[y].size(); ++x) {
+            int dx = x - centerX;
+            int dy = y - centerY;
+            if (dx * dx + dy * dy <= radius * radius) {
+                canvas[y][x] = color;
+            }
+        }
+    }
+}
+
+int main() {
+    const int width = 40;
+    const int height = 20;
+    vector<vector<char>> canvas;
+
+    initCanvas(canvas, width, height);
+
+    char choice;
+    do {
+        cout << "Choose a shape to draw:" << endl;
+        cout << "1. Line" << endl;
+        cout << "2. Rectangle" << endl;
+        cout << "3. Circle" << endl;
+        cout << "4. Clear Canvas" << endl;
+        cout << "5. Exit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                int x1, y1, x2, y2;
+                char color;
+                cout << "Enter starting point (x1, y1): ";
+                cin >> x1 >> y1;
+                cout << "Enter ending point (x2, y2): ";
+                cin >> x2 >> y2;
+                cout << "Enter color character: ";
+                cin >> color;
+                drawLine(canvas, x1, y1, x2, y2, color);
+                break;
+            }
+            case '2': {
+                int x1, y1, x2, y2;
+                char color;
+                cout << "Enter top-left corner (x1, y1): ";
+                cin >> x1 >> y1;
+                cout << "Enter bottom-right corner (x2, y2): ";
+                cin >> x2 >> y2;
+                cout << "Enter color character: ";
+                cin >> color;
+                drawRectangle(canvas, x1, y1, x2, y2, color);
+                break;
+            }
+            case '3': {
+                int centerX, centerY, radius;
+                char color;
+                cout << "Enter center point (x, y): ";
+                cin >> centerX >> centerY;
+                cout << "Enter radius: ";
+                cin >> radius;
+                cout << "Enter color character: ";
+                cin >> color;
+                drawCircle(canvas, centerX, centerY, radius, color);
+                break;
+            }
+            case '4':
+                initCanvas(canvas, width, height);
+                break;
+            case '5':
+                cout << "Exiting..." << endl;
+                break;
+            default:
+                cout << "Invalid choice!" << endl;
+        }
+
+        drawCanvas(canvas);
+        cout << endl;
+
+    } while (choice != '5');
+
+    return 0;
+}
